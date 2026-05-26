@@ -30,6 +30,12 @@ if (message.content === '!hello') {
   if (message.content === '!syan') {
     message.reply('🔥 SYAN FTW 🔥');
   }
+
+  client.once('ready', () => {
+  console.log(`Logged in as ${client.user.tag}`);
+
+  client.user.setActivity('SYAN FTW', { type: 0 }); // Playing
+});
 });
 
 require('dotenv').config();
