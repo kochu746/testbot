@@ -10,6 +10,11 @@ const client = new Client({
 
 client.once('ready', () => {
   console.log(`🔥 Logged in as ${client.user.tag}`);
+
+  // ✅ Set bot status
+  client.user.setActivity('SYAN FTW 🔥', {
+    type: ActivityType.Playing
+  });
 });
 
 client.on('messageCreate', message => {
@@ -30,16 +35,6 @@ if (message.content === '!hello') {
   if (message.content === '!syan') {
     message.reply('🔥 SYAN FTW 🔥');
   }
-
-  const activities = ['SYAN FTW 🔥', 'your server 😎', 'commands 👀'];
-
-let i = 0;
-
-setInterval(() => {
-  client.user.setActivity(activities[i % activities.length], { type: 0 });
-  i++;
-}, 5000);
-
 require('dotenv').config();
 
 client.login(process.env.TOKEN);
