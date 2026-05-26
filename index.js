@@ -31,12 +31,14 @@ if (message.content === '!hello') {
     message.reply('🔥 SYAN FTW 🔥');
   }
 
-  client.once('ready', () => {
-  console.log(`Logged in as ${client.user.tag}`);
+  const activities = ['SYAN FTW 🔥', 'your server 😎', 'commands 👀'];
 
-  client.user.setActivity('SYAN FTW', { type: 0 }); // Playing
-});
-});
+let i = 0;
+
+setInterval(() => {
+  client.user.setActivity(activities[i % activities.length], { type: 0 });
+  i++;
+}, 5000);
 
 require('dotenv').config();
 
