@@ -129,10 +129,6 @@ client.on('interactionCreate', async (interaction) => {
 
 });
 
-
-// 🔐 LOGIN
-client.login(process.env.TOKEN);
-
 // 🔥 READY
 client.once('ready', () => {
   console.log(`🔥 Logged in as ${client.user.tag}`);
