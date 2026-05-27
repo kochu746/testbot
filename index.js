@@ -17,9 +17,9 @@ client.once('ready', () => {
 
   // 🔄 Rotating Status
   const statuses = [
-    'SYAN FTW 🔥',
-    'Use !help 😎',
-    'Gaming Mode 🎮',
+    'Watching You',
+    'Use !help ',
+    'Playing Syan Devoplopment',
     'Powered by SYAN ⚡'
   ];
 
