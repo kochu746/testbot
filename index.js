@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { Client, GatewayIntentBits, ActivityType } = require('discord.js');
+const { Client, GatewayIntentBits, ActivityType, EmbedBuilder } = require('discord.js');
 
 const client = new Client({
   intents: [
@@ -11,17 +11,30 @@ const client = new Client({
 });
 
 
-// 🔥 BOT READY
+// 🔥 READY EVENT
 client.once('ready', () => {
   console.log(`🔥 Logged in as ${client.user.tag}`);
 
-  // 🎮 Status
-  client.user.setActivity('SYAN FTW 🔥', {
-    type: ActivityType.Playing
-  });
+  // 🔄 Rotating Status
+  const statuses = [
+    'SYAN FTW 🔥',
+    'Use !help 😎',
+    'Gaming Mode 🎮',
+    'Powered by SYAN ⚡'
+  ];
+
+  let i = 0;
+
+  setInterval(() => {
+    client.user.setActivity(statuses[i % statuses.length], {
+      type: ActivityType.Playing
+    });
+    i++;
+  }, 5000); // changes every 5 sec
 });
 
 
+// 💬 COMMANDS
 client.on('messageCreate', message => {
   if (message.author.bot) return;
 
@@ -86,7 +99,7 @@ client.on('messageCreate', message => {
       .setTitle('👤 User Info')
       .addFields(
         { name: 'Username', value: message.author.username, inline: true },
-        { name: 'ID', value: message.author.id, inline: true }
+        { name: 'User ID', value: message.author.id, inline: true }
       )
       .setThumbnail(message.author.displayAvatarURL())
       .setFooter({ text: 'SYAN BOT' });
