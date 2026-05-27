@@ -1,6 +1,15 @@
 require('dotenv').config();
 
-const { Client, GatewayIntentBits, ActivityType, EmbedBuilder } = require('discord.js');
+const {
+  Client,
+  GatewayIntentBits,
+  ActivityType,
+  EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  StringSelectMenuBuilder
+} = require('discord.js');
 
 const client = new Client({
   intents: [
@@ -11,177 +20,126 @@ const client = new Client({
 });
 
 
-// 🔥 READY EVENT
+// 🔥 READY
 client.once('ready', () => {
   console.log(`🔥 Logged in as ${client.user.tag}`);
 
-  // 🔄 Rotating Status
-  const statuses = [
-    'Watching You',
-    'Use !help ',
-    'Playing Syan Devoplopment',
-    'Powered by SYAN ⚡'
-  ];
+  const statuses = ['SYAN FTW 🔥', 'Use !panel 😎', 'Gaming Mode 🎮'];
 
   let i = 0;
-
   setInterval(() => {
     client.user.setActivity(statuses[i % statuses.length], {
       type: ActivityType.Playing
     });
     i++;
-  }, 5000); // changes every 5 sec
+  }, 5000);
 });
 
 
-// 💬 COMMANDS
-client.on('messageCreate', message => {
+// 💬 COMMAND → PANEL UI
+client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
-  const msg = message.content.toLowerCase();
+  if (message.content === '!panel') {
 
-  // 🏓 Ping
-  if (msg === '!ping') {
+    // 🎨 Embed
     const embed = new EmbedBuilder()
       .setColor(0xff0000)
-      .setTitle('🏓 Pong!')
-      .setDescription('Bot is working perfectly 🚀')
-      .setFooter({ text: 'SYAN FTW' });
-
-    message.reply({ embeds: [embed] });
-  }
-
-  // 🔥 Branding
-  if (msg === '!syan') {
-    const embed = new EmbedBuilder()
-      .setColor(0xff0000)
-      .setTitle('🔥 SYAN FTW 🔥')
-      .setDescription('Welcome to the SYAN bot 😎')
-      .setFooter({ text: 'Stay Gaming 🎮' });
-
-    message.reply({ embeds: [embed] });
-  }
-
-  // 😂 Joke
-  if (msg === '!joke') {
-    const jokes = [
-      'Why did the gamer quit? Too many respawns 😂',
-      'I tried to catch fog… I mist 😆',
-      'Skill issue detected 😎'
-    ];
-
-    const embed = new EmbedBuilder()
-      .setColor(0xff0000)
-      .setTitle('😂 Random Joke')
-      .setDescription(jokes[Math.floor(Math.random() * jokes.length)])
-      .setFooter({ text: 'SYAN FUN' });
-
-    message.reply({ embeds: [embed] });
-  }
-
-  // 🎲 Roll
-  if (msg.startsWith('!roll')) {
-    const num = Math.floor(Math.random() * 100) + 1;
-
-    const embed = new EmbedBuilder()
-      .setColor(0xff0000)
-      .setTitle('🎲 Dice Roll')
-      .setDescription(`You rolled: **${num}**`)
-      .setFooter({ text: 'Try again!' });
-
-    message.reply({ embeds: [embed] });
-  }
-
-  // 👤 User info
-  if (msg === '!me') {
-    const embed = new EmbedBuilder()
-      .setColor(0xff0000)
-      .setTitle('👤 User Info')
-      .addFields(
-        { name: 'Username', value: message.author.username, inline: true },
-        { name: 'User ID', value: message.author.id, inline: true }
-      )
-      .setThumbnail(message.author.displayAvatarURL())
-      .setFooter({ text: 'SYAN BOT' });
-
-    message.reply({ embeds: [embed] });
-  }
-
-  // 🖥️ Server info
-  if (msg === '!server') {
-    const embed = new EmbedBuilder()
-      .setColor(0xff0000)
-      .setTitle('🖥️ Server Info')
-      .addFields(
-        { name: 'Server Name', value: message.guild.name, inline: true },
-        { name: 'Members', value: `${message.guild.memberCount}`, inline: true }
-      )
-      .setFooter({ text: 'SYAN FTW' });
-
-    message.reply({ embeds: [embed] });
-  }
-
-  // 💬 Say
-  if (msg.startsWith('!say ')) {
-    const text = message.content.slice(5);
-
-    const embed = new EmbedBuilder()
-      .setColor(0xff0000)
-      .setDescription(text)
-      .setFooter({ text: `Requested by ${message.author.username}` });
-
-    message.channel.send({ embeds: [embed] });
-  }
-
-  // ⏰ Time
-  if (msg === '!time') {
-    const embed = new EmbedBuilder()
-      .setColor(0xff0000)
-      .setTitle('⏰ Current Time')
-      .setDescription(new Date().toLocaleString())
-      .setFooter({ text: 'SYAN CLOCK' });
-
-    message.reply({ embeds: [embed] });
-  }
-
-  // ❤️ Love
-  if (msg === '!love') {
-    const embed = new EmbedBuilder()
-      .setColor(0xff0000)
-      .setTitle('❤️ Love')
-      .setDescription('SYAN loves this server 💖')
-      .setFooter({ text: 'Spread love 😎' });
-
-    message.reply({ embeds: [embed] });
-  }
-
-  // 📜 Help
-  if (msg === '!help') {
-    const embed = new EmbedBuilder()
-      .setColor(0xff0000)
-      .setTitle('📜 SYAN BOT COMMANDS')
-      .setDescription(`
-**!ping → Check Bot
-
-!syan → Branding
-
-!joke → Random joke
-
-!roll → Random number 
-
-!me → Your info 
-
-!server → Server info  
-
-!say <text> → Bot repeats 
-
-!time → Current time 
-
-!love → Fun message**  
-      `)
+      .setTitle('🎛️ SYAN CONTROL PANEL')
+      .setDescription('Use buttons or dropdown below 👇')
       .setFooter({ text: 'SYAN FTW 🔥' });
 
-    message.reply({ embeds: [embed] });
+    // 🔘 Buttons
+    const buttons = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId('ping')
+        .setLabel('🏓 Ping')
+        .setStyle(ButtonStyle.Primary),
+
+      new ButtonBuilder()
+        .setCustomId('joke')
+        .setLabel('😂 Joke')
+        .setStyle(ButtonStyle.Success),
+
+      new ButtonBuilder()
+        .setCustomId('love')
+        .setLabel('❤️ Love')
+        .setStyle(ButtonStyle.Danger)
+    );
+
+    // 📜 Dropdown
+    const select = new ActionRowBuilder().addComponents(
+      new StringSelectMenuBuilder()
+        .setCustomId('menu')
+        .setPlaceholder('Choose a command')
+        .addOptions([
+          {
+            label: 'User Info',
+            value: 'me',
+            emoji: '👤'
+          },
+          {
+            label: 'Server Info',
+            value: 'server',
+            emoji: '🖥️'
+          },
+          {
+            label: 'Time',
+            value: 'time',
+            emoji: '⏰'
+          }
+        ])
+    );
+
+    message.reply({
+      embeds: [embed],
+      components: [buttons, select]
+    });
+  }
+});
+
+
+// ⚡ INTERACTIONS (Buttons + Dropdown)
+client.on('interactionCreate', async (interaction) => {
+
+  // 🔘 BUTTONS
+  if (interaction.isButton()) {
+
+    if (interaction.customId === 'ping') {
+      return interaction.reply('🏓 Pong!');
+    }
+
+    if (interaction.customId === 'joke') {
+      const jokes = [
+        'Skill issue 😎',
+        'Why lag? Because WiFi crying 😂',
+        'Noob detected 🎮'
+      ];
+      return interaction.reply(jokes[Math.floor(Math.random() * jokes.length)]);
+    }
+
+    if (interaction.customId === 'love') {
+      return interaction.reply('❤️ SYAN loves you!');
+    }
+  }
+
+
+  // 📜 DROPDOWN
+  if (interaction.isStringSelectMenu()) {
+
+    const value = interaction.values[0];
+
+    if (value === 'me') {
+      return interaction.reply(`👤 Username: ${interaction.user.username}`);
+    }
+
+    if (value === 'server') {
+      return interaction.reply(`🖥️ Server: ${interaction.guild.name}`);
+    }
+
+    if (value === 'time') {
+      return interaction.reply(`⏰ ${new Date().toLocaleString()}`);
+    }
   }
 
 });
