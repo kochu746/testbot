@@ -8,7 +8,8 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  StringSelectMenuBuilder
+  StringSelectMenuBuilder,
+  PermissionsBitField
 } = require('discord.js');
 
 const client = new Client({
@@ -19,6 +20,118 @@ const client = new Client({
   ]
 });
 
+
+// 🔥 READY
+client.once('ready', () => {
+  console.log(`🔥 Logged in as ${client.user.tag}`);
+
+  client.user.setActivity('Admin Panel 🛡️', {
+    type: ActivityType.Playing
+  });
+});
+
+
+// 🛡️ ADMIN PANEL COMMAND
+client.on('messageCreate', async (message) => {
+  if (message.author.bot) return;
+
+  // 🔒 Only admins
+  if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) return;
+
+  if (message.content === '!admin') {
+
+    const embed = new EmbedBuilder()
+      .setColor(0xff0000)
+      .setTitle('🛡️ ADMIN CONTROL PANEL')
+      .setDescription('Use buttons below to manage server ⚡')
+      .setFooter({ text: 'SYAN ADMIN SYSTEM' });
+
+    // 🔘 Buttons
+    const buttons = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId('kick')
+        .setLabel('👢 Kick')
+        .setStyle(ButtonStyle.Danger),
+
+      new ButtonBuilder()
+        .setCustomId('ban')
+        .setLabel('🔨 Ban')
+        .setStyle(ButtonStyle.Danger),
+
+      new ButtonBuilder()
+        .setCustomId('clear')
+        .setLabel('🧹 Clear Chat')
+        .setStyle(ButtonStyle.Primary)
+    );
+
+    // 📜 Dropdown
+    const menu = new ActionRowBuilder().addComponents(
+      new StringSelectMenuBuilder()
+        .setCustomId('admin_menu')
+        .setPlaceholder('Select action')
+        .addOptions([
+          { label: 'Server Info', value: 'server', emoji: '🖥️' },
+          { label: 'Member Count', value: 'members', emoji: '👥' }
+        ])
+    );
+
+    message.reply({
+      embeds: [embed],
+      components: [buttons, menu]
+    });
+  }
+});
+
+
+// ⚡ INTERACTIONS
+client.on('interactionCreate', async (interaction) => {
+
+  if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+    return interaction.reply({ content: '❌ Admin only!', ephemeral: true });
+  }
+
+  // 🔘 BUTTONS
+  if (interaction.isButton()) {
+
+    // 👢 KICK
+    if (interaction.customId === 'kick') {
+      const member = interaction.member;
+
+      return interaction.reply('⚠️ Use command: !kick @user (manual for now)');
+    }
+
+    // 🔨 BAN
+    if (interaction.customId === 'ban') {
+      return interaction.reply('⚠️ Use command: !ban @user (manual for now)');
+    }
+
+    // 🧹 CLEAR CHAT
+    if (interaction.customId === 'clear') {
+      const channel = interaction.channel;
+
+      await channel.bulkDelete(10).catch(() => {});
+      return interaction.reply('🧹 Deleted 10 messages!');
+    }
+  }
+
+
+  // 📜 DROPDOWN
+  if (interaction.isStringSelectMenu()) {
+
+    if (interaction.values[0] === 'server') {
+      return interaction.reply(`🖥️ Server: ${interaction.guild.name}`);
+    }
+
+    if (interaction.values[0] === 'members') {
+      return interaction.reply(`👥 Members: ${interaction.guild.memberCount}`);
+    }
+  }
+
+});
+
+
+// 🔐 LOGIN
+client.login(process.env.TOKEN);
 
 // 🔥 READY
 client.once('ready', () => {
