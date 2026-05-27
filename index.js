@@ -161,15 +161,23 @@ client.on('messageCreate', message => {
       .setColor(0xff0000)
       .setTitle('📜 SYAN BOT COMMANDS')
       .setDescription(`
-!ping → Check bot  
-!syan → Branding  
-!joke → Random joke  
-!roll → Random number  
-!me → Your info  
+**!ping → Check Bot
+
+!syan → Branding
+
+!joke → Random joke
+
+!roll → Random number 
+
+!me → Your info 
+
 !server → Server info  
-!say <text> → Bot repeats  
-!time → Current time  
-!love → Fun message  
+
+!say <text> → Bot repeats 
+
+!time → Current time 
+
+!love → Fun message**  
       `)
       .setFooter({ text: 'SYAN FTW 🔥' });
 
