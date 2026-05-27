@@ -1,4 +1,6 @@
-const { Client, GatewayIntentBits } = require('discord.js');
+require('dotenv').config();
+
+const { Client, GatewayIntentBits, ActivityType } = require('discord.js');
 
 const client = new Client({
   intents: [
@@ -8,48 +10,45 @@ const client = new Client({
   ]
 });
 
+
+// 🔥 BOT READY
 client.once('ready', () => {
   console.log(`🔥 Logged in as ${client.user.tag}`);
 
-  // ✅ Set bot status
+  // 🎮 Status
   client.user.setActivity('SYAN FTW 🔥', {
     type: ActivityType.Playing
   });
 });
 
+
+// 💬 COMMANDS
 client.on('messageCreate', message => {
   if (message.author.bot) return;
 
-  if (message.content === '!ping') {
+  const msg = message.content.toLowerCase();
+
+  // 🏓 Ping
+  if (msg === '!ping') {
     message.reply('🏓 Pong!');
   }
 
-  if (message.content === '!help') {
-  message.reply('Commands: !ping, !syan, !help');
-}
-
- if (message.content === '!hello') {
-  message.reply('Hey 👋 how are you?');
-}
-
-  if (message.content === '!syan') {
-    message.reply('🔥 SYAN FTW 🔥');
-     // 🔥 Branding
+  // 🔥 Branding
   if (msg === '!syan') {
     message.reply('🔥 SYAN FTW 🔥');
   }
 
-  // 😂 Random joke
+  // 😂 Joke
   if (msg === '!joke') {
     const jokes = [
       'Why did the gamer quit? Too many respawns 😂',
       'I tried to catch fog… I mist 😆',
-      'Why noobs hate lag? Because skill issue 😎'
+      'Skill issue detected 😎'
     ];
     message.reply(jokes[Math.floor(Math.random() * jokes.length)]);
   }
 
-  // 🎲 Random number
+  // 🎲 Roll
   if (msg.startsWith('!roll')) {
     const num = Math.floor(Math.random() * 100) + 1;
     message.reply(`🎲 You rolled: ${num}`);
@@ -65,7 +64,7 @@ client.on('messageCreate', message => {
     message.reply(`🖥️ Server: ${message.guild.name}\n👥 Members: ${message.guild.memberCount}`);
   }
 
-  // 💬 Say command
+  // 💬 Say
   if (msg.startsWith('!say ')) {
     const text = message.content.slice(5);
     message.channel.send(text);
@@ -76,11 +75,29 @@ client.on('messageCreate', message => {
     message.reply(`⏰ Time: ${new Date().toLocaleString()}`);
   }
 
-  // ❤️ Fun reply
+  // ❤️ Love
   if (msg === '!love') {
     message.reply('❤️ SYAN loves this server!');
   }
-  }
-require('dotenv').config();
 
+  // 📜 Help
+  if (msg === '!help') {
+    message.reply(`
+📜 **SYAN BOT COMMANDS**
+!ping - Check bot
+!syan - Branding
+!joke - Random joke
+!roll - Random number
+!me - Your info
+!server - Server info
+!say <text> - Bot repeats
+!time - Current time
+!love - Fun message
+    `);
+  }
+
+});
+
+
+// 🔐 LOGIN
 client.login(process.env.TOKEN);
