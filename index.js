@@ -22,7 +22,6 @@ client.once('ready', () => {
 });
 
 
-// 💬 COMMANDS
 client.on('messageCreate', message => {
   if (message.author.bot) return;
 
@@ -30,12 +29,24 @@ client.on('messageCreate', message => {
 
   // 🏓 Ping
   if (msg === '!ping') {
-    message.reply('🏓 Pong!');
+    const embed = new EmbedBuilder()
+      .setColor(0xff0000)
+      .setTitle('🏓 Pong!')
+      .setDescription('Bot is working perfectly 🚀')
+      .setFooter({ text: 'SYAN FTW' });
+
+    message.reply({ embeds: [embed] });
   }
 
   // 🔥 Branding
   if (msg === '!syan') {
-    message.reply('🔥 SYAN FTW 🔥');
+    const embed = new EmbedBuilder()
+      .setColor(0xff0000)
+      .setTitle('🔥 SYAN FTW 🔥')
+      .setDescription('Welcome to the SYAN bot 😎')
+      .setFooter({ text: 'Stay Gaming 🎮' });
+
+    message.reply({ embeds: [embed] });
   }
 
   // 😂 Joke
@@ -45,55 +56,111 @@ client.on('messageCreate', message => {
       'I tried to catch fog… I mist 😆',
       'Skill issue detected 😎'
     ];
-    message.reply(jokes[Math.floor(Math.random() * jokes.length)]);
+
+    const embed = new EmbedBuilder()
+      .setColor(0xff0000)
+      .setTitle('😂 Random Joke')
+      .setDescription(jokes[Math.floor(Math.random() * jokes.length)])
+      .setFooter({ text: 'SYAN FUN' });
+
+    message.reply({ embeds: [embed] });
   }
 
   // 🎲 Roll
   if (msg.startsWith('!roll')) {
     const num = Math.floor(Math.random() * 100) + 1;
-    message.reply(`🎲 You rolled: ${num}`);
+
+    const embed = new EmbedBuilder()
+      .setColor(0xff0000)
+      .setTitle('🎲 Dice Roll')
+      .setDescription(`You rolled: **${num}**`)
+      .setFooter({ text: 'Try again!' });
+
+    message.reply({ embeds: [embed] });
   }
 
   // 👤 User info
   if (msg === '!me') {
-    message.reply(`👤 Username: ${message.author.username}`);
+    const embed = new EmbedBuilder()
+      .setColor(0xff0000)
+      .setTitle('👤 User Info')
+      .addFields(
+        { name: 'Username', value: message.author.username, inline: true },
+        { name: 'ID', value: message.author.id, inline: true }
+      )
+      .setThumbnail(message.author.displayAvatarURL())
+      .setFooter({ text: 'SYAN BOT' });
+
+    message.reply({ embeds: [embed] });
   }
 
   // 🖥️ Server info
   if (msg === '!server') {
-    message.reply(`🖥️ Server: ${message.guild.name}\n👥 Members: ${message.guild.memberCount}`);
+    const embed = new EmbedBuilder()
+      .setColor(0xff0000)
+      .setTitle('🖥️ Server Info')
+      .addFields(
+        { name: 'Server Name', value: message.guild.name, inline: true },
+        { name: 'Members', value: `${message.guild.memberCount}`, inline: true }
+      )
+      .setFooter({ text: 'SYAN FTW' });
+
+    message.reply({ embeds: [embed] });
   }
 
   // 💬 Say
   if (msg.startsWith('!say ')) {
     const text = message.content.slice(5);
-    message.channel.send(text);
+
+    const embed = new EmbedBuilder()
+      .setColor(0xff0000)
+      .setDescription(text)
+      .setFooter({ text: `Requested by ${message.author.username}` });
+
+    message.channel.send({ embeds: [embed] });
   }
 
   // ⏰ Time
   if (msg === '!time') {
-    message.reply(`⏰ Time: ${new Date().toLocaleString()}`);
+    const embed = new EmbedBuilder()
+      .setColor(0xff0000)
+      .setTitle('⏰ Current Time')
+      .setDescription(new Date().toLocaleString())
+      .setFooter({ text: 'SYAN CLOCK' });
+
+    message.reply({ embeds: [embed] });
   }
 
   // ❤️ Love
   if (msg === '!love') {
-    message.reply('❤️ SYAN loves this server!');
+    const embed = new EmbedBuilder()
+      .setColor(0xff0000)
+      .setTitle('❤️ Love')
+      .setDescription('SYAN loves this server 💖')
+      .setFooter({ text: 'Spread love 😎' });
+
+    message.reply({ embeds: [embed] });
   }
 
   // 📜 Help
   if (msg === '!help') {
-    message.reply(`
-📜 **SYAN BOT COMMANDS**
-!ping - Check bot
-!syan - Branding
-!joke - Random joke
-!roll - Random number
-!me - Your info
-!server - Server info
-!say <text> - Bot repeats
-!time - Current time
-!love - Fun message
-    `);
+    const embed = new EmbedBuilder()
+      .setColor(0xff0000)
+      .setTitle('📜 SYAN BOT COMMANDS')
+      .setDescription(`
+!ping → Check bot  
+!syan → Branding  
+!joke → Random joke  
+!roll → Random number  
+!me → Your info  
+!server → Server info  
+!say <text> → Bot repeats  
+!time → Current time  
+!love → Fun message  
+      `)
+      .setFooter({ text: 'SYAN FTW 🔥' });
+
+    message.reply({ embeds: [embed] });
   }
 
 });
